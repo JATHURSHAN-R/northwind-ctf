@@ -1,0 +1,126 @@
+
+# Northwind Logistics Breach — CTF Play Box
+# See NOTE_network_decision.md for why this is one flat challenge_net
+# rather than the strictly-segmented internal tier from the design diagram.
+
+networks:
+  challenge_net:
+    driver: bridge
+  ctfd_net:
+    driver: bridge
+
+services:
+  # ---- Control layer ----
+  ctfd:
+    image: ctfd/ctfd:latest
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - UPLOAD_FOLDER=/var/uploads
+      - DATABASE_URL=mysql+pymysql://ctfd:${CTFD_DB_PASSWORD:-changeme}@ctfd_db/ctfd
+      - REDIS_URL=redis://ctfd_cache:6379
+    depends_on:
+      - ctfd_db
+      - ctfd_cache
+    networks:
+      - ctfd_net
+    volumes:
+      - ctfd_uploads:/var/uploads
+
+  ctfd_db:
+    image: mariadb:10.11
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${CTFD_DB_ROOT_PASSWORD:-changeme_root}
+      - MYSQL_USER=ctfd
+      - MYSQL_PASSWORD=${CTFD_DB_PASSWORD:-changeme}
+      - MYSQL_DATABASE=ctfd
+    networks:
+      - ctfd_net
+    volumes:
+      - ctfd_db_data:/var/lib/mysql
+
+  ctfd_cache:
+    image: redis:7-alpine
+    restart: unless-stopped
+    networks:
+      - ctfd_net
+
+  # ---- Stage 1-2: OSINT + Steganography (static evidence server) ----
+  stage1-2-evidence:
+    build: ./stage1-2-evidence
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    networks:
+      - challenge_net
+    read_only: true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETUID
+      - SETGID
+      - DAC_OVERRIDE
+    tmpfs:
+      - /var/cache/nginx
+      - /var/run
+      - /tmp
+  # ---- Stage 3: Web Security (Northwind internal portal) ----
+  stage3-portal:
+    build: ./stage3-portal
+    restart: unless-stopped
+    ports:
+      - "8083:5000"
+    networks:
+      - challenge_net
+    cap_drop:
+      - ALL
+    # No cap_add needed: the app runs as the non-root 'appuser' (set in
+    # the Dockerfile) and only opens a listening socket and writes its
+    # own sqlite file under /tmp -- neither needs any Linux capability.
+
+  # ---- Stage 4-5: Cryptography + Networking artifacts (static files) ----
+  stage4-5-files:
+    build: ./stage4-crypto
+    restart: unless-stopped
+    ports:
+      - "8085:80"
+    networks:
+      - challenge_net
+    read_only: true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETUID
+      - SETGID
+      - DAC_OVERRIDE
+    tmpfs:
+      - /var/cache/nginx
+      - /var/run
+      - /tmp
+  # ---- Stage 6: Linux/System Security (capstone, SSH) ----
+  stage6-staging:
+    build: ./stage6-staging
+    restart: unless-stopped
+    ports:
+      - "2222:22"
+    networks:
+      - challenge_net
+    security_opt:
+      - no-new-privileges:false   # deliberately allowed — SUID abuse is the intended technique for this stage
+    # NOTE: not capability-restricted like the other stages. sshd needs a
+    # fairly broad capability set to manage PAM sessions, ptys, and user
+    # switching correctly, and getting a minimal cap_drop set wrong here
+    # would silently break SSH login rather than fail loudly. This
+    # container is disposable and network-isolated to challenge_net, so
+    # the risk is acceptable — but if you want to harden this further,
+    # test any cap_drop changes against a real `docker compose up` and
+    # confirm SSH login + the SUID privesc path both still work before
+    # trusting it for the live event.
+
+volumes:
+  ctfd_uploads:
+  ctfd_db_data:

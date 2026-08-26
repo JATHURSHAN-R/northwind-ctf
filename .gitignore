@@ -1,0 +1,17 @@
+# Never commit real credentials
+.env
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# SQLite databases (rebuilt on container start)
+*.db
+
+# Editor junk
+.DS_Store
+*.swp
+*.swo
+
+# Temp files
+*.log

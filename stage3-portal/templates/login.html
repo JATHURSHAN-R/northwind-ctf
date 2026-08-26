@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Northwind Logistics -- Internal Portal</title>
+<style>
+  body{font-family:Tahoma,Arial,sans-serif;background:#e9edf1;margin:0;padding:0}
+  .header{background:#1f3a5f;color:#fff;padding:14px 24px;font-size:1.1em}
+  .box{max-width:340px;margin:60px auto;background:#fff;border:1px solid #ccc;
+       border-radius:4px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+  h2{margin-top:0;font-size:1.1em;color:#1f3a5f}
+  label{display:block;margin-top:10px;font-size:0.85em;color:#444}
+  input[type=text],input[type=password]{width:100%;padding:6px;margin-top:4px;
+       box-sizing:border-box;border:1px solid #bbb;border-radius:3px}
+  button{margin-top:16px;background:#1f3a5f;color:#fff;border:none;padding:8px 18px;
+       border-radius:3px;cursor:pointer}
+  .error{color:#b00020;font-size:0.85em;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="header">Northwind Logistics &mdash; Internal Portal</div>
+<div class="box">
+  <h2>Sign in</h2>
+  <form method="POST">
+    <label>Username</label>
+    <input type="text" name="username" autocomplete="off">
+    <label>Password</label>
+    <input type="password" name="password">
+    <button type="submit">Log in</button>
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+  </form>
+</div>
+</body></html>

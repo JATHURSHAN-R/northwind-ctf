@@ -1,0 +1,10 @@
+Backup recovery note -- pulled from an old mail server snapshot, dated
+the week Ravi's account was supposed to be deactivated.
+
+Subject: (no subject)
+Attachment: intercepted.txt
+
+No idea what this is. Whatever it is, it wasn't sent through anything
+modern -- the mail headers show it went out as a plain text attachment,
+no encryption library, no key exchange. If there's anything in here,
+it's something simple enough Ravi could do by hand.
