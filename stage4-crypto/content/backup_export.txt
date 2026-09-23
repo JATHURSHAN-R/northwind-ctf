@@ -1,0 +1,10 @@
+Northwind Logistics -- internal staging export
+Do not distribute.
+
+staging-server: 203.0.113.77
+service-account: ravi_svc
+service-password: StagingAccess#22
+
+Flag: NW{cleartext_exfiltration_detected}
+
+Note: rotate this before anyone notices.
