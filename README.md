@@ -53,14 +53,9 @@ VULN_MODE=idor   # IDOR — log in as 'test'/'test123', view /message/1 directly
 | 2 | `NW{ch4ndu_kn3w_t00_much}` |
 | 3 | `NW{4uth_1s_h4rd3r_th4n_1t_l00ks}` |
 | 4 | `NW{legacy_ciphers_die_hard}` |
+| 5 | 'NW{cleartext_exfiltration_detected}'|
 | 6 | `NW{suid_find_is_forever}` |
 
-Stage 5 has no separate flag file baked in yet — its "flag" is the
-credential pair extracted from the pcap (`ravi_svc` /
-`StagingAccess#22`), which doubles as the access needed for Stage 6. If
-your group wants a distinct Stage 5 flag string too (rather than the
-credentials themselves being the proof of completion), that's a small
-addition to `backup_export.txt` + regenerating the pcap.
 
 ## Known gaps / next steps
 
