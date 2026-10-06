@@ -6,6 +6,7 @@
 networks:
   challenge_net:
     driver: bridge
+    internal: true
   ctfd_net:
     driver: bridge
 
@@ -15,7 +16,7 @@ services:
     image: ctfd/ctfd:latest
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     environment:
       - UPLOAD_FOLDER=/var/uploads
       - DATABASE_URL=mysql+pymysql://ctfd:${CTFD_DB_PASSWORD:-changeme}@ctfd_db/ctfd
@@ -52,7 +53,7 @@ services:
     build: ./stage1-2-evidence
     restart: unless-stopped
     ports:
-      - "8081:80"
+      - "127.0.0.1:8081:80"
     networks:
       - challenge_net
     read_only: true
@@ -70,9 +71,12 @@ services:
   # ---- Stage 3: Web Security (Northwind internal portal) ----
   stage3-portal:
     build: ./stage3-portal
+    environment:
+      VULN_MODE: ${VULN_MODE:-sqli}
+      FLASK_SECRET: ${FLASK_SECRET:?Set FLASK_SECRET in .env}
     restart: unless-stopped
     ports:
-      - "8083:5000"
+      - "127.0.0.1:8083:5000"
     networks:
       - challenge_net
     cap_drop:
@@ -86,7 +90,7 @@ services:
     build: ./stage4-crypto
     restart: unless-stopped
     ports:
-      - "8085:80"
+      - "127.0.0.1:8085:80"
     networks:
       - challenge_net
     read_only: true
@@ -106,7 +110,7 @@ services:
     build: ./stage6-staging
     restart: unless-stopped
     ports:
-      - "2222:22"
+      - "127.0.0.1:2222:22"
     networks:
       - challenge_net
     security_opt:
