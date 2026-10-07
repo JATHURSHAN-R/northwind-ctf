@@ -16,7 +16,7 @@ USER appuser
 # Which single vulnerability is live: "sqli" or "idor" -- set in
 # docker-compose.yml or an .env file. Defaults to sqli if unset.
 ENV VULN_MODE=sqli
-ENV FLASK_SECRET=change-me-in-production
+# FLASK_SECRET is supplied at runtime through Compose.
 
 EXPOSE 5000
 CMD ["python3", "app.py"]

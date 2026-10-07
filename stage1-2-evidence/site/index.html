@@ -3,7 +3,37 @@
 <head><meta charset="UTF-8"><title>Northwind Logistics - Staff Directory</title>
 <style>body{font-family:Arial,sans-serif;max-width:700px;margin:40px auto;color:#222}
 h1{color:#1f3a5f}.person{border-bottom:1px solid #ddd;padding:12px 0}
-.role{color:#666;font-size:0.9em}</style></head>
+.role{color:#666;font-size:0.9em}</style><meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style id="northwind-redesign">
+*{box-sizing:border-box}
+body{
+  max-width:1000px;margin:0 auto;padding:70px 28px;
+  font-family:Arial,sans-serif;color:#e2e8f0;min-height:100vh;
+  background:radial-gradient(ellipse at top right,#164e63,transparent 55%),#0b1220;
+  line-height:1.7
+}
+body::before{
+  content:"NORTHWIND / PEOPLE & OPERATIONS";display:block;
+  color:#67e8f9;letter-spacing:3px;font-size:12px;margin-bottom:28px
+}
+h1{font-size:clamp(30px,5vw,48px);line-height:1.15;color:#fff;
+   letter-spacing:-1px;margin-bottom:20px}
+body>p{color:#94a3b8;max-width:650px;margin-bottom:38px}
+.person{
+  background:#142033;border:1px solid #293b51;border-left:4px solid #22d3ee;
+  border-radius:12px;padding:24px;margin:18px 0;
+  box-shadow:0 12px 28px #0003
+}
+.person strong{color:#fff;font-size:20px}
+.role{display:block;color:#fbbf24;font-size:14px;margin-top:7px}
+a{color:#67e8f9;text-underline-offset:5px}
+a:hover{color:#fff}
+a:focus-visible{outline:3px solid #fbbf24;outline-offset:5px}
+@media(max-width:600px){body{padding:35px 18px}.person{padding:18px}}
+</style>
+
+</head>
 <body>
 <h1>Northwind Logistics — Staff Directory</h1>
 <p>Internal directory. For IT issues contact the helpdesk.</p>
